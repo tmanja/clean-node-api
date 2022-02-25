@@ -3,14 +3,12 @@
   "version": "1.0.0",
   "description": "API REST em Node.js utilizando Clean Architecture, TDD e Design Patterns.",
   "main": "index.js",
-  "lint-staged": {
-    "*.js": [ "standard --fix" ]
-  },
   "standard": {
     "env": [ "jest" ]
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch",
+    "test:staged": "jest --findRelatedTests --bail",
     "prepare": "husky install",
     "pre-commit": "lint-staged"
   },
