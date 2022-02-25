@@ -21,4 +21,15 @@ describe('Login Controller', () => {
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
   })
+  it('should return 500 if no httpRequest is provided', () => {
+    const sut = new LoginController()
+    const httpResponse = sut.handle()
+    expect(httpResponse.statusCode).toBe(500)
+  })
+  it('should return 500 if httpRequest has no body', () => {
+    const sut = new LoginController()
+    const httpRequest = {}
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
