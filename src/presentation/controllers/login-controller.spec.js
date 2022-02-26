@@ -39,4 +39,10 @@ describe('Login Controller', () => {
     sut.handle(httpRequest)
     expect(spyAuthUseCase.auth).toHaveBeenCalledWith(email, password)
   })
+  it('should return 401 when invalid credentials are provided', () => {
+    const { sut } = makeSut()
+    const httpRequest = { body: { email: 'invalid_email@mail.com', password: 'invalid_password' } }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(401)
+  })
 })
