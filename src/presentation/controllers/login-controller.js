@@ -1,4 +1,4 @@
-const HttpResponse = require('../helpers/http-response')
+const HttpResponse = require('../helpers/http-response-helper')
 const MissingParamError = require('../errors/missing-param-error')
 
 class LoginController {
@@ -17,8 +17,11 @@ class LoginController {
     if (!password) {
       return HttpResponse.badRequest(new MissingParamError('password'))
     }
-    this.authUseCase.auth(email, password)
-    return HttpResponse.unauthorized()
+    const accessToken = this.authUseCase.auth(email, password)
+    if (!accessToken) {
+      return HttpResponse.unauthorized()
+    }
+    return HttpResponse.ok({ accessToken })
   }
 }
 
