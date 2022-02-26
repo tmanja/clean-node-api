@@ -1,11 +1,17 @@
+const HttpResponse = require('../helpers/http-response')
+const MissingParamError = require('../errors/missing-param-error')
+
 class LoginController {
   handle (httpRequest) {
     if (!httpRequest?.body) {
-      return { statusCode: 500 }
+      return HttpResponse.serverError()
     }
     const { email, password } = httpRequest.body
-    if (!email || !password) {
-      return { statusCode: 400 }
+    if (!email) {
+      return HttpResponse.badRequest(new MissingParamError('email'))
+    }
+    if (!password) {
+      return HttpResponse.badRequest(new MissingParamError('password'))
     }
   }
 }
