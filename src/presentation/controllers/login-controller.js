@@ -8,7 +8,7 @@ class LoginController {
 
   handle (httpRequest) {
     if (!httpRequest?.body) {
-      return HttpResponse.serverError()
+      return HttpResponse.internalServerError()
     }
     const { email, password } = httpRequest.body
     if (!email) {
@@ -18,9 +18,7 @@ class LoginController {
       return HttpResponse.badRequest(new MissingParamError('password'))
     }
     this.authUseCase.auth(email, password)
-    return {
-      statusCode: 401
-    }
+    return HttpResponse.unauthorized()
   }
 }
 

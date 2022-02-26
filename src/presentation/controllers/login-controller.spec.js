@@ -1,5 +1,5 @@
 const MissingParamError = require('../errors/missing-param-error')
-const { badRequest, serverError } = require('../helpers/http-response')
+const { badRequest, internalServerError, unauthorized } = require('../helpers/http-response')
 const LoginController = require('./login-controller')
 
 function makeSut () {
@@ -24,13 +24,13 @@ describe('Login Controller', () => {
   it('should return 500 if no httpRequest is provided', () => {
     const { sut } = makeSut()
     const httpResponse = sut.handle()
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(internalServerError())
   })
   it('should return 500 if httpRequest has no body', () => {
     const { sut } = makeSut()
     const httpRequest = {}
     const httpResponse = sut.handle(httpRequest)
-    expect(httpResponse).toEqual(serverError())
+    expect(httpResponse).toEqual(internalServerError())
   })
   it('should call AuthUseCase with email and password', () => {
     const { sut, spyAuthUseCase } = makeSut()
@@ -43,6 +43,6 @@ describe('Login Controller', () => {
     const { sut } = makeSut()
     const httpRequest = { body: { email: 'invalid_email@mail.com', password: 'invalid_password' } }
     const httpResponse = sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
