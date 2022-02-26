@@ -7,7 +7,7 @@ class LoginController {
   }
 
   handle (httpRequest) {
-    if (!httpRequest?.body) {
+    if (!httpRequest?.body || !this.authUseCase?.auth) {
       return HttpResponse.internalServerError()
     }
     const { email, password } = httpRequest.body
