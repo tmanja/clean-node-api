@@ -27,12 +27,6 @@ describe('Login Controller', () => {
     expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError('password')))
   })
 
-  it('should call AuthUseCase with correct values', () => {
-    const { sut, mockAuthUseCase } = makeSut()
-    const { email, password } = makeFakeHttpRequest().body
-    sut.handle(makeFakeHttpRequest())
-    expect(mockAuthUseCase.auth).toHaveBeenCalledWith(email, password)
-  })
   it('should return 500 if no AuthUseCase is provided', () => {
     const sut = new LoginController()
     const httpResponse = sut.handle(makeFakeHttpRequest())
@@ -40,6 +34,18 @@ describe('Login Controller', () => {
   })
   it('should return 500 if AuthUseCase has no auth method', () => {
     const sut = new LoginController({})
+    const httpResponse = sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(HttpResponse.internalServerError())
+  })
+  it('should call AuthUseCase with correct values', () => {
+    const { sut, mockAuthUseCase } = makeSut()
+    const { email, password } = makeFakeHttpRequest().body
+    sut.handle(makeFakeHttpRequest())
+    expect(mockAuthUseCase.auth).toHaveBeenCalledWith(email, password)
+  })
+  it('should return 500 if AuthUseCase throws', () => {
+    const { sut, mockAuthUseCase } = makeSut()
+    mockAuthUseCase.auth.mockImplementationOnce(() => { throw new Error() })
     const httpResponse = sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(HttpResponse.internalServerError())
   })
