@@ -4,11 +4,13 @@
   "description": "API REST em Node.js utilizando Clean Architecture, TDD e Design Patterns.",
   "main": "index.js",
   "standard": {
-    "env": [ "jest" ]
+    "env": [
+      "jest"
+    ]
   },
   "scripts": {
     "test": "jest",
-    "test:unit": "jest --watch -c jest-unit-config.js",
+    "test:unit": "jest --watch -c jest-unit-config.js --noStackTrace",
     "test:integration": "jest --watch -c jest-integration-config.js",
     "test:staged": "jest --findRelatedTests --bail",
     "test:ci": "jest --coverage",
@@ -27,9 +29,14 @@
   },
   "homepage": "https://github.com/tmanja/clean-node-api#readme",
   "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@types/validator": "^13.7.1",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.4",
     "standard": "^16.0.4"
+  },
+  "dependencies": {
+    "validator": "^13.7.0"
   }
 }
