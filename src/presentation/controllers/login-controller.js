@@ -6,7 +6,7 @@ class LoginController {
     this.authUseCase = authUseCase
   }
 
-  handle (httpRequest) {
+  async handle (httpRequest) {
     try {
       const { email, password } = httpRequest.body
       if (!email) {
@@ -15,7 +15,7 @@ class LoginController {
       if (!password) {
         return HttpResponse.badRequest(new MissingParamError('password'))
       }
-      const accessToken = this.authUseCase.auth(email, password)
+      const accessToken = await this.authUseCase.auth(email, password)
       if (!accessToken) {
         return HttpResponse.unauthorized()
       }
