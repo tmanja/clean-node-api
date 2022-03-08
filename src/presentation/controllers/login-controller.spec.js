@@ -34,6 +34,16 @@ describe('Login Controller', () => {
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(HttpResponse.badRequest(new InvalidParamError('email')))
   })
+  it('should return 500 if no EmailValidator is provided', async () => {
+    const sut = new LoginController(makeAuthUseCase())
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(HttpResponse.internalServerError())
+  })
+  it('should return 500 if EmailValidator has no isValid method', async () => {
+    const sut = new LoginController(makeAuthUseCase(), {})
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(HttpResponse.internalServerError())
+  })
 
   it('should return 500 if no AuthUseCase is provided', async () => {
     const sut = new LoginController()
@@ -70,9 +80,17 @@ describe('Login Controller', () => {
   })
 })
 
+function makeAuthUseCase () {
+  return { auth: jest.fn().mockResolvedValue(makeFakeAccessToken()) }
+}
+
+function makeEmailValidator () {
+  return { isValid: jest.fn().mockReturnValue(true) }
+}
+
 function makeSut () {
-  const mockAuthUseCase = { auth: jest.fn().mockResolvedValue(makeFakeAccessToken()) }
-  const mockEmailValidator = { isValid: jest.fn().mockReturnValue(true) }
+  const mockAuthUseCase = makeAuthUseCase()
+  const mockEmailValidator = makeEmailValidator()
   const sut = new LoginController(mockAuthUseCase, mockEmailValidator)
   return { sut, mockAuthUseCase, mockEmailValidator }
 }
