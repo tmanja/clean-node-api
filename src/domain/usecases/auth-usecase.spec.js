@@ -4,12 +4,16 @@ const { MissingParamError } = require('../../utils/errors')
 describe('AuthUseCase', () => {
   it('should throws if no email is provided', async () => {
     const sut = new AuthUseCase()
-    const PromiseAccessToken = sut.auth()
-    await expect(PromiseAccessToken).rejects.toThrow(new MissingParamError('email'))
+    await expect(sut.auth).rejects.toThrow(new MissingParamError('email'))
   })
   it('should throws if no password is provided', async () => {
     const sut = new AuthUseCase()
-    const PromiseAccessToken = sut.auth('any_email@mail.com')
-    await expect(PromiseAccessToken).rejects.toThrow(new MissingParamError('password'))
+    await expect(sut.auth('any_email@mail.com')).rejects.toThrow(new MissingParamError('password'))
+  })
+  it('should call LoadUserByEmailRepository with correct email', async () => {
+    const mockLoadUserByEmailRepository = { load: jest.fn() }
+    const sut = new AuthUseCase(mockLoadUserByEmailRepository)
+    await sut.auth('any_email@mail.com', 'any_password')
+    expect(mockLoadUserByEmailRepository.load).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
