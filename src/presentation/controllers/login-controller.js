@@ -14,7 +14,7 @@ class LoginController {
       if (!email) {
         return HttpResponse.badRequest(new MissingParamError('email'))
       }
-      if (!this.emailValidator.isValid()) {
+      if (!this.emailValidator.isValid(email)) {
         return HttpResponse.badRequest(new InvalidParamError('email'))
       }
       if (!password) {

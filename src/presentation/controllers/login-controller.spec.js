@@ -50,6 +50,12 @@ describe('Login Controller', () => {
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(HttpResponse.internalServerError())
   })
+  it('should call EmailValidator with correct email', async () => {
+    const { sut, mockEmailValidator } = makeSut()
+    const { email } = makeFakeHttpRequest().body
+    await sut.handle(makeFakeHttpRequest())
+    expect(mockEmailValidator.isValid).toHaveBeenCalledWith(email)
+  })
 
   it('should return 500 if no AuthUseCase is provided', async () => {
     const sut = new LoginController()
