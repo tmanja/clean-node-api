@@ -1,4 +1,5 @@
 const MissingParamError = require('../errors/missing-param-error')
+const InvalidParamError = require('../errors/invalid-param-error')
 const HttpResponse = require('../helpers/http-response-helper')
 const LoginController = require('./login-controller')
 
@@ -27,6 +28,13 @@ describe('Login Controller', () => {
     expect(httpResponse).toEqual(HttpResponse.badRequest(new MissingParamError('password')))
   })
 
+  it('should return 400 if an invalid email is provided', async () => {
+    const { sut, mockEmailValidator } = makeSut()
+    mockEmailValidator.isValid.mockReturnValueOnce(false)
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(HttpResponse.badRequest(new InvalidParamError('email')))
+  })
+
   it('should return 500 if no AuthUseCase is provided', async () => {
     const sut = new LoginController()
     const httpResponse = await sut.handle(makeFakeHttpRequest())
@@ -49,7 +57,6 @@ describe('Login Controller', () => {
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(HttpResponse.internalServerError())
   })
-
   it('should return 401 when invalid credentials are provided', async () => {
     const { sut, mockAuthUseCase } = makeSut()
     mockAuthUseCase.auth.mockResolvedValueOnce(null)
@@ -65,8 +72,9 @@ describe('Login Controller', () => {
 
 function makeSut () {
   const mockAuthUseCase = { auth: jest.fn().mockResolvedValue(makeFakeAccessToken()) }
-  const sut = new LoginController(mockAuthUseCase)
-  return { sut, mockAuthUseCase }
+  const mockEmailValidator = { isValid: jest.fn().mockReturnValue(true) }
+  const sut = new LoginController(mockAuthUseCase, mockEmailValidator)
+  return { sut, mockAuthUseCase, mockEmailValidator }
 }
 
 function makeFakeAccessToken () {
