@@ -44,6 +44,12 @@ describe('Login Controller', () => {
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(HttpResponse.internalServerError())
   })
+  it('should return 500 if EmailValidator throws', async () => {
+    const { sut, mockEmailValidator } = makeSut()
+    mockEmailValidator.isValid.mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(HttpResponse.internalServerError())
+  })
 
   it('should return 500 if no AuthUseCase is provided', async () => {
     const sut = new LoginController()
@@ -63,7 +69,9 @@ describe('Login Controller', () => {
   })
   it('should return 500 if AuthUseCase throws', async () => {
     const { sut, mockAuthUseCase } = makeSut()
-    mockAuthUseCase.auth.mockImplementationOnce(() => { throw new Error() })
+    mockAuthUseCase.auth.mockImplementationOnce(async () => {
+      throw new Error()
+    })
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(HttpResponse.internalServerError())
   })
