@@ -1,4 +1,4 @@
-const { MissingParamError, InvalidParamError } = require('../errors')
+const { MissingParamError, InvalidParamError } = require('../../utils/errors')
 const HttpResponse = require('../helpers/http-response-helper')
 const LoginController = require('./login-controller')
 
