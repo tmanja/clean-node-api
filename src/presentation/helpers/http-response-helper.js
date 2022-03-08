@@ -1,5 +1,4 @@
-const InternalServerError = require('../errors/internal-server-error')
-const UnauthorizedError = require('../errors/unauthorized-error')
+const { InternalServerError, UnauthorizedError } = require('../errors')
 
 class HttpResponse {
   static badRequest (error) {
