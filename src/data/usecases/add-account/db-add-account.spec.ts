@@ -1,5 +1,5 @@
-import { Encrypter } from "../../protocols/encrypter"
 import { DbAddAccount } from "./db-add-account"
+import { Encrypter } from "./db-add-account-protocols"
 
 function makeEncrypter (): Encrypter {
   class EncrypterStub implements Encrypter {
