@@ -1,5 +1,5 @@
 import { DbAddAccount } from "./db-add-account"
-import { Encrypter } from "./db-add-account-protocols"
+import { AccountModel, AddAccountModel, Encrypter, AddAccountRepository } from "./db-add-account-protocols"
 
 function makeEncrypter (): Encrypter {
   class EncrypterStub implements Encrypter {
@@ -10,17 +10,35 @@ function makeEncrypter (): Encrypter {
   return new EncrypterStub()
 }
 
+function makeAddAccountRepository (): AddAccountRepository {
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add (accountData: AddAccountModel): Promise<AccountModel> {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@mail.com',
+        password: 'encrypted_password'
+      }
+      return new Promise(resolve => resolve(fakeAccount))
+    }
+  }
+  return new AddAccountRepositoryStub()
+}
+
 interface SutTypes {
   sut: DbAddAccount
   encrypterStub: Encrypter,
+  addAccountRepositoryStub:AddAccountRepository 
 }
 
 function makeSut (): SutTypes {
   const encrypterStub = makeEncrypter()
-  const sut = new DbAddAccount(encrypterStub)
+  const addAccountRepositoryStub = makeAddAccountRepository()
+  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
   return {
     sut,
-    encrypterStub
+    encrypterStub,
+    addAccountRepositoryStub
   }
   
 }
@@ -48,5 +66,20 @@ describe('DbAddAccount usecase', () => {
     }
     const accountPromise = sut.add(accountData)
     await expect(accountPromise).rejects.toThrow()
+  })
+
+  test('should call AddAccountRepository with correct values', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password'
+    }
+    await sut.add(accountData)
+    expect(addSpy).toHaveBeenCalledWith({
+      ...accountData,
+      password: 'encrypted_password' 
+    })
   })
 })
