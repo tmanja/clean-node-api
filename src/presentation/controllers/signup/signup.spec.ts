@@ -166,8 +166,7 @@ describe('SignUp Controller', () => {
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw fakeError
     })
-    const httpRequest = makeFakeHttpRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(serverError(fakeError))
   })
 
@@ -195,8 +194,7 @@ describe('SignUp Controller', () => {
 
   test('should return 200 if valid data is provided', async () => {
     const { sut } = makeSut()
-    const httpRequest = makeFakeHttpRequest()
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(ok(makeFakeAccount()))
   }) 
   
@@ -207,4 +205,12 @@ describe('SignUp Controller', () => {
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
+
+  test('should return 400 if valid returns an error', async () => {
+    const { sut, validationStub } = makeSut()
+    const fakeMissingParamError = new MissingParamError('any_field')
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(fakeMissingParamError)
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(badRequest(fakeMissingParamError))
+  }) 
 })
