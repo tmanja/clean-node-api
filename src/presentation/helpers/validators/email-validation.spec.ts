@@ -28,7 +28,6 @@ function makeSut (): SutTypes {
 describe('SignUp Controller', () => {
   test('should return an InvalidParamError if EmailValidator returns false', () => {
     const { sut, emailValidatorStub } = makeSut()
-    const fakeMissingParamError = new InvalidParamError('any_field')
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
     const validationError = sut.validate({ email: 'invalid_email@mail.com' })
     expect(validationError).toEqual(new InvalidParamError('email'))
