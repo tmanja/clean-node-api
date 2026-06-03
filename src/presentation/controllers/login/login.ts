@@ -1,33 +1,23 @@
-import { MissingParamError, InvalidParamError } from "../../errors"
 import { badRequest, unauthorized, serverError, ok } from "../../helpers/http-helper"
-import { Controller, EmailValidator, Authentication, HttpRequest, HttpResponse } from "./login-protocols"
+import { Controller, Authentication, HttpRequest, HttpResponse, Validation } from "./login-protocols"
 
 
 export class LoginController implements Controller {
-  private readonly emailValidator: EmailValidator
+  private readonly validation: Validation
   private readonly authentication: Authentication
 
-  constructor (emailValidator: EmailValidator, authentication: Authentication) {
-    this.emailValidator = emailValidator
+  constructor (validation: Validation, authentication: Authentication) {
+    this.validation = validation
     this.authentication = authentication
   }
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['email', 'password']
-      for (const field of requiredFields) {
-        if (!httpRequest.body[field]) {
-          return badRequest(new MissingParamError(field))
-        }
+      const validationError = this.validation.validate(httpRequest.body)
+      if (validationError) {
+        return badRequest(validationError)
       }
       const { email, password } = httpRequest.body
-      if (!password) {
-        return badRequest(new MissingParamError('password'))
-      }
-      const emailIsValid = this.emailValidator.isValid(email)
-      if (!emailIsValid) {
-        return badRequest(new InvalidParamError('email'))
-      }
       const accessToken = await this.authentication.auth(email, password)
       if (!accessToken) {
         return unauthorized()
