@@ -1,10 +1,6 @@
-import { Credentials } from "../../../domain/usecases/authentication"
-import { HashComparer } from "../../protocols/cryptography/hash-comparer"
-import { TokenGenerator } from "../../protocols/cryptography/token-generator"
-import { LoadAccountByEmailRepository } from "../../protocols/db/load-account-by-email-repository"
-import { UpdateAccessTokenRepository } from "../../protocols/db/update-access-token-repository"
-import { AccountModel } from "../add-account/db-add-account-protocols"
 import { DbAuthentication } from "./db-authentication"
+import { AccountModel, Credentials, HashComparator, LoadAccountByEmailRepository, TokenGenerator, UpdateAccessTokenRepository } from "./db-authentication-protocols"
+
 
 function makeFakeAccount (): AccountModel {
   return {
@@ -24,8 +20,8 @@ function makeLoadAccountByEmailRepository (): LoadAccountByEmailRepository {
   return new LoadAccountByEmailRepositoryStub()
 }
 
-function makeHashComparer (): HashComparer {
-  class HashComparerStub implements HashComparer {
+function makeHashComparator (): HashComparator {
+  class HashComparerStub implements HashComparator {
     async compare(password: string, hash: string): Promise<boolean> {
       return Promise.resolve(true) 
     }
@@ -61,14 +57,14 @@ function makeFakeCredentials (): Credentials {
 interface SutTypes {
   sut: DbAuthentication,
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository,
-  hashComparerStub: HashComparer,
+  hashComparerStub: HashComparator,
   tokenGeneratorStub: TokenGenerator,
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
 function makeSut (): SutTypes {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
-  const hashComparerStub = makeHashComparer()
+  const hashComparerStub = makeHashComparator()
   const tokenGeneratorStub = makeTokenGenerator()
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const sut = new DbAuthentication(
