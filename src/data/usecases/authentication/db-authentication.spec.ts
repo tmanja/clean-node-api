@@ -69,7 +69,7 @@ describe('DbAuthentication Usecase', () => {
     const fakeError = new Error()
     jest.spyOn(loadAccountByEmailRepositoryStub, 'load').mockRejectedValueOnce(fakeError)
     const accessTokenPromise = sut.auth(makeFakeCredentials())
-    expect(accessTokenPromise).rejects.toThrow()
+    await expect(accessTokenPromise).rejects.toThrow(fakeError)
   })
 
   test('should return null if LoadAccountByEmailRepository returns null', async () => {
@@ -88,5 +88,13 @@ describe('DbAuthentication Usecase', () => {
       fakeCredentials.password, 
       makeFakeAccount().password
     )
+  })
+
+  test('should throw if HashComparer throws', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    const fakeError = new Error()
+    jest.spyOn(hashComparerStub, 'compare').mockRejectedValueOnce(fakeError)
+    const accessTokenPromise = sut.auth(makeFakeCredentials())
+    await expect(accessTokenPromise).rejects.toThrow(fakeError)
   })
 })
