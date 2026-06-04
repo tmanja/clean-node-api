@@ -1,11 +1,11 @@
 import { MissingParamError } from "../../errors"
 import {  badRequest, ok, serverError, unauthorized } from "../../helpers/http/http-helper"
 import { LoginController } from "./login"
-import { Authentication, CredentialModel, HttpRequest, Validation } from "./login-protocols"
+import { Authentication, Credentials, HttpRequest, Validation } from "./login-protocols"
 
 function makeAuthentication (): Authentication {
   class AuthenticationStub implements Authentication {
-    async auth (credential: CredentialModel): Promise<string | null> {
+    async auth (credentials: Credentials): Promise<string | null> {
       return Promise.resolve('any_token')
     }
   }
