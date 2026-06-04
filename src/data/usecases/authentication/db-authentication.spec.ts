@@ -128,4 +128,12 @@ describe('DbAuthentication Usecase', () => {
     await sut.auth(makeFakeCredentials())
     expect(generateSpy).toHaveBeenCalledWith(makeFakeAccount().id)
   })
+
+  test('should throws if TokenGenerator throws', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    const fakeError = new Error()
+    jest.spyOn(tokenGeneratorStub, 'generate').mockRejectedValueOnce(fakeError)
+    const accessTokenPromise = sut.auth(makeFakeCredentials())
+    await expect(accessTokenPromise).rejects.toThrow()
+  })
 })
