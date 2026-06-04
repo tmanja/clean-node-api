@@ -148,7 +148,7 @@ describe('DbAuthentication Usecase', () => {
     const fakeError = new Error()
     jest.spyOn(tokenGeneratorStub, 'generate').mockRejectedValueOnce(fakeError)
     const accessTokenPromise = sut.auth(makeFakeCredentials())
-    await expect(accessTokenPromise).rejects.toThrow()
+    await expect(accessTokenPromise).rejects.toThrow(fakeError)
   })
 
   test('should return an access token on success', async () => {
@@ -162,5 +162,13 @@ describe('DbAuthentication Usecase', () => {
     const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update')
     await sut.auth(makeFakeCredentials())
     expect(updateSpy).toHaveBeenCalledWith(makeFakeAccount().id, 'any_token')
+  })
+
+  test('should throws if UpdateAccessTokenRepository throws', async () => {
+    const { sut, updateAccessTokenRepositoryStub } = makeSut()
+    const fakeError = new Error()
+    jest.spyOn(updateAccessTokenRepositoryStub, 'update').mockRejectedValueOnce(fakeError)
+    const accessTokenPromise = sut.auth(makeFakeCredentials())
+    await expect(accessTokenPromise).rejects.toThrow(fakeError)
   })
 })
