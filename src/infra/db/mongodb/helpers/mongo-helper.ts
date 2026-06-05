@@ -21,7 +21,7 @@ export const MongoHelper = {
   },
 
   map<T>(data: any): T {
-    const { _id, ...collectionWithoutId } = data;
-    return Object.assign({}, collectionWithoutId, { id: _id.toString() }) as T;
+    const { _id, ...documentWithoutId } = data;
+    return Object.assign({}, documentWithoutId, { id: _id.toString() }) as T;
   }
 }
