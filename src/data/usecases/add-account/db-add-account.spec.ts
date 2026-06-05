@@ -41,7 +41,7 @@ function makeSut (): SutTypes {
   const sut = new DbAddAccount(hasherStub, addAccountRepositoryStub)
   return {
     sut,
-    hasherStub: hasherStub,
+    hasherStub,
     addAccountRepositoryStub
   }
   
