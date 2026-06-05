@@ -7,7 +7,7 @@ export class JwtAdapter implements Encrypter {
     this.secretKey = secretKey
   }
   encrypt(value: string): string {
-    jwt.sign({ id: value }, this.secretKey)
-    return null as unknown as string
+    const accessToken = jwt.sign({ id: value }, this.secretKey)
+    return accessToken
   }
 }
