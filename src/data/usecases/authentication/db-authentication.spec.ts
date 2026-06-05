@@ -31,8 +31,8 @@ function makeHashComparator (): HashComparator {
 
 function makeEncrypter (): Encrypter {
   class EncrypterStub implements Encrypter {
-    encrypt(value: string): Promise<string> {
-      return Promise.resolve('any_token')
+    encrypt(value: string): string {
+      return 'any_token'
     }
   }
   return new EncrypterStub()
@@ -142,7 +142,9 @@ describe('DbAuthentication Usecase', () => {
   test('should throws if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
     const fakeError = new Error()
-    jest.spyOn(encrypterStub, 'encrypt').mockRejectedValueOnce(fakeError)
+    jest.spyOn(encrypterStub, 'encrypt').mockImplementation(() => {
+      throw fakeError
+    })
     const accessTokenPromise = sut.auth(makeFakeCredentials())
     await expect(accessTokenPromise).rejects.toThrow(fakeError)
   })
