@@ -1,7 +1,7 @@
 import { MissingParamError } from "../../errors"
 import { badRequest, ok, serverError } from "../../helpers/http/http-helper"
-import { SignUpController } from "./signup"
-import { AddAccount, AddAccountModel, AccountModel, HttpRequest, Validation } from "./signup-protocols"
+import { SignUpController } from "./signup-controller"
+import { AddAccount, AddAccountModel, AccountModel, HttpRequest, Validation } from "./signup-controller-protocols"
 
 function makeFakeAccount (): AccountModel {
   return {
