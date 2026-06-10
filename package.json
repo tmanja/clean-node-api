@@ -4,7 +4,9 @@
   "description": "API em NodeJs usando Typescript, TDD, Clean Architecture, Design Patterns e SOLID principles",
   "main": "index.js",
   "scripts": {
-    "start": "sucrase-node src/main/server.ts",
+    "start": "node dist/main/server.js",
+    "build": "rimraf dist && tsc",
+    "dev": "sucrase-node src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand --watch",
     "test:unit": "npm test -- --watch -c jest-unit.config.js",
@@ -31,6 +33,7 @@
     "husky": "^9.1.7",
     "jest": "^30.4.2",
     "lint-staged": "^17.0.5",
+    "rimraf": "^6.1.3",
     "sucrase": "^3.35.1",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.11",
@@ -39,7 +42,6 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
-    "fast-glob": "^3.3.3",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.2.0",
     "validator": "^13.15.35"
