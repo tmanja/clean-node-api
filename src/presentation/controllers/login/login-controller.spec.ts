@@ -50,11 +50,11 @@ function makeFakeHttpRequest (): HttpRequest {
 describe('Login Controller', () => {
   test('should call Authentication with correct values', async () => {
     const { sut, authenticationStub } = makeSut()
-    const isValidSpy = jest.spyOn(authenticationStub, 'auth')
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
     const fakeHttpRequest = makeFakeHttpRequest()
     await sut.handle(fakeHttpRequest)
     const { email, password } = fakeHttpRequest.body
-    expect(isValidSpy).toHaveBeenCalledWith({
+    expect(authSpy).toHaveBeenCalledWith({
       email,
       password
     })
