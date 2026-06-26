@@ -1,6 +1,6 @@
 import { mkdir } from "node:fs"
-import { MissingParamError } from "../../errors"
-import { badRequest, ok, serverError } from "../../helpers/http/http-helper"
+import { EmailAlreadyInUseError, MissingParamError } from "../../errors"
+import { badRequest, forbidden, ok, serverError } from "../../helpers/http/http-helper"
 import { SignUpController } from "./signup-controller"
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, Validation, Authentication, Credentials } from "./signup-controller-protocols"
 
@@ -93,6 +93,15 @@ describe('SignUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError(fakeError))
   })
+
+  test('should return 403 if AddAccount returns null', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
+      return Promise.resolve(null)
+    })
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(forbidden(new EmailAlreadyInUseError()))
+  }) 
 
   test('should return 200 if valid data is provided', async () => {
     const { sut } = makeSut()
