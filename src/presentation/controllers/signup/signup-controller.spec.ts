@@ -1,3 +1,4 @@
+import { mkdir } from "node:fs"
 import { MissingParamError } from "../../errors"
 import { badRequest, ok, serverError } from "../../helpers/http/http-helper"
 import { SignUpController } from "./signup-controller"
@@ -125,5 +126,13 @@ describe('SignUp Controller', () => {
       email, 
       password
     })
+  })
+
+  test('should return 500 if Authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const fakeError = new Error()
+    jest.spyOn(authenticationStub, 'auth').mockRejectedValueOnce(fakeError)
+    const httpResponse = await sut.handle(makeFakeHttpRequest())
+    expect(httpResponse).toEqual(serverError(fakeError))
   })
 })
