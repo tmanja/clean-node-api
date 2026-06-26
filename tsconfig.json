@@ -9,6 +9,5 @@
     "types": ["jest", "node"],
     "sourceMap": true
   },
-  "include": ["src"],
-  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src"]
 }
