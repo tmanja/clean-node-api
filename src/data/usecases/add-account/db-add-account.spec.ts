@@ -1,3 +1,4 @@
+import { LoadAccountByEmailRepository } from "../authentication/db-authentication-protocols"
 import { DbAddAccount } from "./db-add-account"
 import { AccountModel, AddAccountModel, Hasher, AddAccountRepository } from "./db-add-account-protocols"
 
@@ -28,21 +29,33 @@ function makeAddAccountRepository (): AddAccountRepository {
   return new AddAccountRepositoryStub()
 }
 
+function makeLoadAccountByEmailRepository (): LoadAccountByEmailRepository {
+  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
+    async loadByEmail(email: string): Promise<AccountModel | null> {
+      return Promise.resolve(makeFakeAccount())
+    }
+  }
+  return new LoadAccountByEmailRepositoryStub()
+}
+
 
 interface SutTypes {
   sut: DbAddAccount
   hasherStub: Hasher,
   addAccountRepositoryStub:AddAccountRepository 
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 
 function makeSut (): SutTypes {
   const hasherStub = makeHasher()
   const addAccountRepositoryStub = makeAddAccountRepository()
-  const sut = new DbAddAccount(hasherStub, addAccountRepositoryStub)
+  const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
+  const sut = new DbAddAccount(hasherStub, addAccountRepositoryStub, loadAccountByEmailRepositoryStub)
   return {
     sut,
     hasherStub,
-    addAccountRepositoryStub
+    addAccountRepositoryStub,
+    loadAccountByEmailRepositoryStub
   }
   
 }
@@ -93,5 +106,13 @@ describe('DbAddAccount usecase', () => {
     const { sut } = makeSut()
     const account = await sut.add(makeFakeAccountData())
     expect(account).toEqual(makeFakeAccount())
+  })
+
+  test('should call LoadAccountByEmailRepository with correct email', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    const loadByEmailSpy = jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail')
+    const fakeAccountData = makeFakeAccountData()
+    await sut.add(fakeAccountData)
+    expect(loadByEmailSpy).toHaveBeenCalledWith(fakeAccountData.email)
   })
 })
