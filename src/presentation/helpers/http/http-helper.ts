@@ -15,6 +15,13 @@ export function unauthorized (): HttpResponse {
   }
 }
 
+export function forbidden (error: Error): HttpResponse {
+  return {
+    statusCode: 403,
+    body: error
+  }
+}
+
 export function serverError (error: Error): HttpResponse {
   return {
     statusCode: 500,
