@@ -1,4 +1,3 @@
-import { mkdir } from "node:fs"
 import { EmailAlreadyInUseError, MissingParamError } from "../../errors"
 import { badRequest, forbidden, ok, serverError } from "../../helpers/http/http-helper"
 import { SignUpController } from "./signup-controller"
