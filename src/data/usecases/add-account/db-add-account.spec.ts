@@ -77,7 +77,7 @@ describe('DbAddAccount usecase', () => {
     expect(encryptSpy).toHaveBeenCalledWith(fakeAccountData.password)
   })
 
-  test('should throws if Hasher throws ', async () => {
+  test('should throws when Hasher throws ', async () => {
     const { sut, hasherStub } = makeSut()
     jest.spyOn(hasherStub, 'hash').mockRejectedValueOnce(new Error())
     const accountPromise = sut.add(makeFakeAccountData())
@@ -95,7 +95,7 @@ describe('DbAddAccount usecase', () => {
     })
   })
 
-  test('should throws if AddAccountRepository throws ', async () => {
+  test('should throws when AddAccountRepository throws ', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
     jest.spyOn(addAccountRepositoryStub, 'add').mockRejectedValueOnce(new Error())
     const accountPromise = sut.add(makeFakeAccountData())
@@ -116,7 +116,7 @@ describe('DbAddAccount usecase', () => {
     expect(loadByEmailSpy).toHaveBeenCalledWith(fakeAccountData.email)
   })
 
-  test('should return null if LoadAccountByEmailRepository not returns null', async () => {
+  test('should return null when LoadAccountByEmailRepository not returns null', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockResolvedValueOnce(makeFakeAccount())
     const account = await sut.add(makeFakeAccountData())

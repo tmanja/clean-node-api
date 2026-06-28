@@ -84,7 +84,7 @@ describe('SignUp Controller', () => {
     })
   })
 
-  test('should return 500 if AddAccount throws', async () => {
+  test('should return 500 when AddAccount throws', async () => {
     const { sut, addAccountStub  } = makeSut()
     const fakeError = new Error()
     jest.spyOn(addAccountStub, 'add').mockRejectedValueOnce(fakeError)
@@ -93,7 +93,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual(serverError(fakeError))
   })
 
-  test('should return 403 if AddAccount returns null', async () => {
+  test('should return 403 when AddAccount returns null', async () => {
     const { sut, addAccountStub } = makeSut()
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
       return Promise.resolve(null)
@@ -102,7 +102,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual(forbidden(new EmailAlreadyInUseError()))
   }) 
 
-  test('should return 200 if valid data is provided', async () => {
+  test('should return 200 when valid data is provided', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeFakeHttpRequest())
     expect(httpResponse).toEqual(ok({ accessToken: 'any_token'}))
@@ -116,7 +116,7 @@ describe('SignUp Controller', () => {
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  test('should return 400 if Validation returns an error', async () => {
+  test('should return 400 when Validation returns an error', async () => {
     const { sut, validationStub } = makeSut()
     const fakeMissingParamError = new MissingParamError('any_field')
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(fakeMissingParamError)
@@ -136,7 +136,7 @@ describe('SignUp Controller', () => {
     })
   })
 
-  test('should return 500 if Authentication throws', async () => {
+  test('should return 500 when Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
     const fakeError = new Error()
     jest.spyOn(authenticationStub, 'auth').mockRejectedValueOnce(fakeError)

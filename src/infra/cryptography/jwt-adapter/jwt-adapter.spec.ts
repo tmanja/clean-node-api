@@ -25,7 +25,7 @@ describe('Jwt Adapter', () => {
     expect(accessToken).toBe('any_token')
   })
 
-  test('should throw if sign throws', () => {
+  test('should throw when sign throws', () => {
     const sut = makeSut()
     jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
       throw new Error()
