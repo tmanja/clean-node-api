@@ -6,7 +6,7 @@ export interface Survey {
 }
 
 export interface SurveyAnswer {
-  image: string,
+  image?: string,
   answer: string
 }
 
