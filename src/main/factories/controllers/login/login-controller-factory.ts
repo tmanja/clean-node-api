@@ -2,7 +2,7 @@ import { LoginController } from "../../../../presentation/controllers/login/logi
 import { Controller } from "../../../../presentation/protocols"
 import { makeLogControllerDecorator } from "../../decorators/log-controller-decorator-factory"
 import { makeDbAuthentication } from "../../usecases/authentication/db-authentication-factory"
-import { makeLoginValidation } from "./login-validations-factory"
+import { makeLoginValidation } from "./login-validation-factory"
 
 
 export function makeLoginController (): Controller {
