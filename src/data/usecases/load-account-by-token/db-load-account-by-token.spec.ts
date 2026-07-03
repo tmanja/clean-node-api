@@ -47,7 +47,7 @@ function makeSut (): SutTypes {
   }
 }
 
-describe('DbLoadAccountByToken', () => {
+describe('DbLoadAccountByToken Usecase', () => {
   test('should call Decrypter with correct value', async () => {
     const { sut, decrypterStub } = makeSut()
     const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
@@ -67,5 +67,12 @@ describe('DbLoadAccountByToken', () => {
     const loadByTokenSpy = jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken')
     await sut.load('any_token', 'any_role')
     expect(loadByTokenSpy).toHaveBeenCalledWith('any_token', 'any_role')
+  })
+
+  test('should return null when LoadAccountByTokenRepository returns null', async () => {
+    const { sut, loadAccountByTokenRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockResolvedValueOnce(null)
+    const account = await sut.load('any_token', 'any_role')
+    expect(account).toBeNull()
   })
 })
