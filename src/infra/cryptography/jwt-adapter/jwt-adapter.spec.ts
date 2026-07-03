@@ -12,24 +12,26 @@ function makeSut (): JwtAdapter {
 }
 
 describe('Jwt Adapter', () => {
-  test('should call sign with correct values', () => {
-    const sut = makeSut()
-    const signSpy = jest.spyOn(jwt, 'sign')
-    sut.encrypt('any_id')
-    expect(signSpy).toHaveBeenCalledWith({ id: 'any_id'}, 'secret_key')
-  })
-  
-  test('should return an access token on sign success', () => {
-    const sut = makeSut()
-    const accessToken = sut.encrypt('any_id')
-    expect(accessToken).toBe('any_token')
-  })
-
-  test('should throw when sign throws', () => {
-    const sut = makeSut()
-    jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
-      throw new Error()
+  describe('sign()', () => {
+    test('should call sign with correct values', () => {
+      const sut = makeSut()
+      const signSpy = jest.spyOn(jwt, 'sign')
+      sut.encrypt('any_id')
+      expect(signSpy).toHaveBeenCalledWith({ id: 'any_id'}, 'secret_key')
     })
-    expect(() => sut.encrypt('any_id')).toThrow()
+    
+    test('should return an access token on sign success', () => {
+      const sut = makeSut()
+      const accessToken = sut.encrypt('any_id')
+      expect(accessToken).toBe('any_token')
+    })
+
+    test('should throw when sign throws', () => {
+      const sut = makeSut()
+      jest.spyOn(jwt, 'sign').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      expect(() => sut.encrypt('any_id')).toThrow()
+    })
   })
 })
