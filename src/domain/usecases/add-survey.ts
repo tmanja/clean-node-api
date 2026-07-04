@@ -2,12 +2,13 @@ import { AccountModel } from "../models/account"
 
 export interface Survey {
   question: string,
-  answers: SurveyAnswer[]
+  answers: SurveyAnswer[],
+  date: Date
 }
 
 export interface SurveyAnswer {
   image?: string,
-  answer: string
+  answer: string,
 }
 
 export interface AddSurvey {
