@@ -114,5 +114,26 @@ describe('Survey Routes ', () => {
       .send()
       .expect(200)
     })
+
+    test('should return 204 when there are no surveys', async () => {
+      const { insertedId } = await accountCollection.insertOne({
+        name: 'Thalles',
+        email: 'thalles.manjaterra@gmail.com',
+        password: '123'
+      })
+      const accessToken = sign({ id: insertedId }, env.jwtSecret)
+      await accountCollection.updateOne({
+        _id: insertedId
+      }, {
+        $set: {
+          accessToken
+        }
+      })
+      await request(app)
+      .get('/api/surveys')
+      .set('x-access-token', accessToken)
+      .send()
+      .expect(204)
+    })
   })
 })
