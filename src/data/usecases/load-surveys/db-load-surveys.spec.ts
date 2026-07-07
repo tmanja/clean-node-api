@@ -39,7 +39,7 @@ function makeLoadSurveys(): LoadSurveysRepository {
   return new LoadSurveysRepositoryStub()
 }
 
-interface SutTypes {
+type SutTypes = {
   sut: DbLoadSurveys
   loadSurveysRepositoryStub: LoadSurveysRepository
 }
