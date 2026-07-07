@@ -7,7 +7,10 @@
     "esModuleInterop": true,
     "allowJs": true,
     "types": ["jest", "node"],
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]

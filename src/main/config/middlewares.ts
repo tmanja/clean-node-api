@@ -1,5 +1,5 @@
-import { Express } from "express";
 import { bodyParser, cors, contentType } from "../middlewares";
+import { Express } from "express";
 
 
 export default function (app: Express): void {

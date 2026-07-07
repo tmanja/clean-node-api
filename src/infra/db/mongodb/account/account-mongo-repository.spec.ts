@@ -1,6 +1,6 @@
-import { Collection } from "mongodb";
-import { MongoHelper } from "../helpers/mongo-helper"
 import { AccountMongoRepository } from "./account-mongo-repository";
+import { MongoHelper } from "../helpers/mongo-helper"
+import { Collection } from "mongodb";
 
 function makeSut () {
   return new AccountMongoRepository()
